@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "rajeshtutta123/Rajesh_Portfolio"
+        DOCKER_IMAGE = "rajeshtutta123/rajesh_portfolio"
         AWS_CREDS = credentials('aws-creds')
         AWS_DEFAULT_REGION = 'us-east-1'
     }
