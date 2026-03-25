@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: portfoliocont
-        image: rajeshtutta123/portfolio:latest
+        image: rajeshtutta123/rajesh_portfolio:latest
         ports:
         - containerPort: 80
