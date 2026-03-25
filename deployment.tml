@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portfoliodeploy
+  labels:
+    app: portfolio
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: portfolio
+  template:
+    metadata:
+      labels:
+        app: portfolio
+    spec:
+      containers:
+      - name: portfoliocont
+        image: rajeshtutta123/portfolio:latest
+        ports:
+        - containerPort: 80
