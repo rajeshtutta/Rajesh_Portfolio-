@@ -25,58 +25,26 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh 'echo $PASS | docker login -u $USER --password-stdin'
-                    sh 'docker push $DOCKER_IMAGE:latest'
-                    sh 'docker logout'
+                    sh '''
+                    echo $PASS | docker login -u $USER --password-stdin
+                    docker push $DOCKER_IMAGE:latest
+                    docker logout
+                    '''
                 }
             }
         }
 
-    stages {
         stage('Build') {
             steps {
-                echo 'Building...'
+                echo "Building..."
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Testing...'
+                echo "Testing..."
             }
         }
-    }
-
-    post {
-        success {
-            emailext (
-                subject: "Jenkins Job '${env.JOB_NAME}' Success",
-                body: "Good news! Job '${env.JOB_NAME}' (#${env.BUILD_NUMBER}) succeeded.\n\nCheck console output at ${env.BUILD_URL}",
-                to: "${RECIPIENTS}"
-            )
-        }
-        failure {
-            emailext (
-                subject: "Jenkins Job '${env.JOB_NAME}' Failed",
-                body: "Alert! Job '${env.JOB_NAME}' (#${env.BUILD_NUMBER}) failed.\n\nCheck console output at ${env.BUILD_URL}",
-                to: "${RECIPIENTS}"
-            )
-        }
-    }
-}
-        stage('Build') {
-    steps {
-        echo "Building..."
-    }
-    post {
-        success {
-            emailext(
-                subject: "Build Stage Success",
-                body: "Build completed successfully",
-                to: "${RECIPIENTS}"
-            )
-        }
-    }
-}
 
         stage('Deploy to EKS') {
             steps {
@@ -91,5 +59,23 @@ pipeline {
             }
         }
 
+    }
+
+    post {
+        success {
+            emailext(
+                subject: "Jenkins Job '${env.JOB_NAME}' Success",
+                body: "Good news! Job '${env.JOB_NAME}' (#${env.BUILD_NUMBER}) succeeded.\n\nCheck console output at ${env.BUILD_URL}",
+                to: "${RECIPIENTS}"
+            )
+        }
+
+        failure {
+            emailext(
+                subject: "Jenkins Job '${env.JOB_NAME}' Failed",
+                body: "Alert! Job '${env.JOB_NAME}' (#${env.BUILD_NUMBER}) failed.\n\nCheck console output at ${env.BUILD_URL}",
+                to: "${RECIPIENTS}"
+            )
+        }
     }
 }
